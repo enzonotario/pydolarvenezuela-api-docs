@@ -1,12 +1,23 @@
-// https://vitepress.dev/guide/custom-theme
-import Layout from './Layout.vue'
+import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
-import './style.css'
+
+import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import 'vitepress-theme-openapi/dist/style.css'
+
+import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
-  Layout,
-  enhanceApp({ app, router, siteData }) {
-    // ...
+  ...DefaultTheme,
+  async enhanceApp({app, router, siteData}) {
+    // Set the OpenAPI specification.
+    const openapi = useOpenapi()
+    openapi.setSpec(spec)
+
+    // Optionally, configure the theme.
+    const themeConfig = useTheme()
+    themeConfig.setLocale('es') // en or es
+
+    // Use the theme.
+    theme.enhanceApp({app})
   }
 } satisfies Theme
-
